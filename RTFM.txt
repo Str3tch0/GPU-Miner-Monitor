@@ -1,0 +1,42 @@
+!!PLACE THIS FOLDER IN C:/MinerMonitor_v2/
+
+#1
+Place Miner.bat file SHORTCUT and GPUWatchDog SHORTCUT in the following directory.
+(You must create shortcuts for these, do not place the original file in this directory) 
+
+C:\Users\***YOURUSER***\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+
+#2
+Edit lines #16 and #17 with minimum and maximum desired temps to trigger reset
+
+#3
+Edit Line #7 with number of GPUs connected to rig
+
+#4
+Edit Line #23 with the proccess name to kill and reset. IE. ccminer_cuda9*
+
+#5
+EDIT line #27 with the path and NAME of your miner.bat SHORTCUT file you place in startup directory
+IE.
+$Minerpath = "C:\Users\GPUminer\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\MinerBatchFileShortCut.lnk"
+
+#6
+Edit lines 30 through 37 with your email credentials. Default is gmail
+
+DONATIONS:
+BTC: 3MsDq2tKbMp5XUXJyuTgf7xec5CD7TnS8E
+LTC: LM2cC8UcCEtA9bHVGHGU7JD6zGw6YPM4cr
+XZC: aPDbR5T4YFeqvPHRsdT1uoJvE5MQtbjekE
+XVG: DU7uBvbYdSaHfrk6aPPHZDnQaTjsxKzpCP
+
+####################################################################
+#  _______ _________ _______  ______ _________ _______             #
+#  (  ____ \\__   __/(  ____ )/ ___  \\__   __/(  ____ \|\     /|  #
+#  | (    \/   ) (   | (    )|\/   \  \  ) (   | (    \/| )   ( |  # 
+#  | (_____    | |   | (____)|   ___) /  | |   | |      | (___) |  #
+#  (_____  )   | |   |     __)  (___ (   | |   | |      |  ___  |  # 
+#        ) |   | |   | (\ (         ) \  | |   | |      | (   ) |  #
+#  /\____) |   | |   | ) \ \__/\___/  /  | |   | (____/\| )   ( |  #
+#  \_______)   )_(   |/   \__/\______/   )_(   (_______/|/     \|  #
+#                                                                  #
+####################################################################   
