@@ -44,7 +44,7 @@ Start-Sleep 15
 function GetElapsedTime([datetime]$starttime) 
 {
     $runtime = $(get-date) - $starttime
-    $retStr = [string]::format("{0} sec(s)-", $runtime.TotalSeconds)
+    $retStr = [string]::format("{0:00} min(s)----", $runtime.TotalMinutes)
     $retStr
 }
 
@@ -93,7 +93,7 @@ ForEach($GPU In $gputemp)
 
 
 $elapsed = GetElapsedTime $script:startTime
-write-host "-Up Time: " $elapsed;
+write-host "-----Up Time: " $elapsed;
 
 
 
@@ -164,4 +164,4 @@ Start-Sleep 30
 #  /\____) |   | |   | ) \ \__/\___/  /  | |   | (____/\| )   ( |  #
 #  \_______)   )_(   |/   \__/\______/   )_(   (_______/|/     \|  #
 #                                                                  #
-####################################################################                                                             
+####################################################################                                  
