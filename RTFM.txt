@@ -10,7 +10,7 @@ C:\Users\***YOURUSER***\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\St
 Edit lines #16 and #17 with minimum and maximum desired temps to trigger reset
 
 #3
-Edit Line #7 with number of GPUs connected to rig
+Edit Line #20 with number of GPUs connected to rig
 
 #4
 Edit Line #23 with the proccess name to kill and reset. IE. ccminer_cuda9*
