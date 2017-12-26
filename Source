@@ -1,6 +1,6 @@
 Write-Host " "
 Write-Host " "
-write-host -foregroundcolor "magenta"  "*****GPU Miner WatchDog*****"
+write-host -foregroundcolor "magenta"  "***********GPU Miner WatchDog**********"
 Write-Host " "
 Write-Host " "
 
@@ -13,7 +13,7 @@ $minerrestartno = 0
 
 
 #set gpu min max threshold for restarting miner
-$temptrig = 37
+$temptrig = 40
 $tempmaxallow = 85 
 
 #enter total number of gpus currently connected to rig
@@ -27,9 +27,9 @@ $minername = "ccminer_cuda9*"
 $Minerpath = "C:\Users\****YourUser****\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\ZcoinMPH.lnk"
 
 #Email information for notifications
-$credentials = new-object Management.Automation.PSCredential “****YourEmail****@gmail.com”, (“****YourPassword****” | ConvertTo-SecureString -AsPlainText -Force)
+$credentials = new-object Management.Automation.PSCredential “****YourEail****@gmail.com”, (“****YourPassword****” | ConvertTo-SecureString -AsPlainText -Force)
 $From = "****YourEmail****@gmail.com"
-$To = "****TheirEmail****@gmail.com"
+$To = "****ToEmail****@gmail.com"
 $Attachment = "C:\MinerMonitor_v2\LogFile.log"
 $Subject = "Miner Rebooted"
 $Body = "Your mining software was restarted 3 times and triggered the box to reboot"
@@ -44,7 +44,7 @@ Start-Sleep 15
 function GetElapsedTime([datetime]$starttime) 
 {
     $runtime = $(get-date) - $starttime
-    $retStr = [string]::format("{0:00} min(s)----", $runtime.TotalMinutes)
+    $retStr = [string]::format("{0:dd} days {0:hh} hours {0:mm} minutes-" -f $runtime)
     $retStr
 }
 
@@ -54,9 +54,9 @@ $ProcessName = "openhardwaremonitor"
 
     if((get-process $ProcessName -ErrorAction SilentlyContinue) -eq $Null)
     { Start-Process -FilePath ".\OpenHardwareMonitor\OpenHardwareMonitor.exe" -WindowStyle Minimized 
-    echo "--Starting Hardware Monitor--" }
+    echo "--------Starting Hardware Monitor------" }
 else
-    { echo "--Hardware Monitor Running--" }
+    { echo "--------Hardware Monitor Running-------" }
 
 #to check for ccminer process running or not
 $ProcessName = "ccminer_cuda9"
@@ -64,12 +64,12 @@ $ProcessName = "ccminer_cuda9"
     if((Get-Process $ProcessName -ErrorAction SilentlyContinue) -eq $Null)
     { Start-Process -FilePath $Minerpath
     echo " "
-    Write-Host -foregroundcolor "red" "****CCMiner Not Running****"
+    Write-Host -foregroundcolor "red" "**********CCMiner Not Running**********"
     echo " "
-    Write-Host -ForegroundColor "DarkRed" "-----Starting CCMiner------"
+    Write-Host -ForegroundColor "red" "------------Starting CCMiner-----------"
     echo " " }
 else
-    { echo "------CCminer Running-------" }
+    { echo "------------CCminer Running------------" }
 
 #Check GPU load
 while($true)
@@ -81,19 +81,20 @@ $gputemp = Get-WmiObject -namespace root\openhardwaremonitor -class sensor | Whe
 ForEach($GPU In $gputemp) 
      {if($GPU.value -lt $temptrig )
         {$mytest = $GPU.value
-        Write-Host -foregroundcolor "red" $mytest"°C -- GPU Temp Low, May Not Be Mining --"
+        Write-Host -foregroundcolor "red" "-" $mytest"°C - GPU Temp Low, Possible Error -"
+        Write-Host " "
         "$Date - Low result obtained $mytest°C" >> $Log
         $failtestcount = $failtestcount + 1                                      
         }
       else 
         {$mytest = $GPU.value
-        Write-Host "-- "$mytest"°C -- GPU Is Mining --"   
+        Write-Host "----- "$mytest"°C ----- GPU Is Mining -------"   
         }
      }
 
 
 $elapsed = GetElapsedTime $script:startTime
-write-host "-----Up Time: " $elapsed;
+write-host "-Up Time: " $elapsed
 
 
 
@@ -101,8 +102,10 @@ write-host "-----Up Time: " $elapsed;
 #trigger restart
 if($failtestcount -ge 1 )
 {
-    "$Date Miner Restart" >> $Log
-    Write-Output " ****Restarting Miner****"
+    "$Date - Miner Restart" >> $Log
+    Write-Host " "
+    Write-Host -ForegroundColor "red" "************Restarting Miner***********"
+    Write-Host " "
     Stop-Process -name $minername -force
     Start-Process -FilePath $Minerpath
     $minerrestartno = $minerrestartno + 1
@@ -112,19 +115,20 @@ if($failtestcount -ge 1 )
 
      if($minerrestartno -ge 3)
      {
-     Write-Host -ForegroundColor "red" "****Updating Log File and Sending Notification Email****"
+     Write-Host -ForegroundColor "red" "*******Sending Notification Email******"
+     "$Date Computer Restart" >> $Log
+     "-Up Time: $elapsed" >> $Log
      Send-MailMessage -From $From -To $To -Subject $Subject -Body $Body -SmtpServer $SMTPServer -Port $SMTPPort -UseSsl -Credential $credentials -Attachments $Attachment
      Stop-Process -name $minername -force
      Start-Sleep 30
-     "$Date Computer Restart" >> $Log
-              Restart-Computer -force
+                   Restart-Computer -force
      }
 
 }
 else
  {
  Write-Host " "
- Write-Host -foregroundcolor "green" "!!!!Making Money Bitches!!!!"
+ Write-Host -foregroundcolor "green" "!!!!!!!!!!Making Money Bitches!!!!!!!!!"
  }
 
 
@@ -140,6 +144,7 @@ if($GPU.value -gt $tempmaxallow)
      $failtestcount = 0
      $script:startTime = Get-Date
     "$Date GPU Running Too Hot" >> $Log
+    "-Up Time: $elapsed" >> $Log
     }
 
 
@@ -147,7 +152,7 @@ if($GPU.value -gt $tempmaxallow)
 Write-Host " "
 Write-Host " "
 Write-Host " "
-Write-Host "------Rechecking GPUs------"
+Write-Host "------------Rechecking GPUs------------"
 Write-Host " "
 Write-Host " "
 Write-Host " "
@@ -164,4 +169,4 @@ Start-Sleep 30
 #  /\____) |   | |   | ) \ \__/\___/  /  | |   | (____/\| )   ( |  #
 #  \_______)   )_(   |/   \__/\______/   )_(   (_______/|/     \|  #
 #                                                                  #
-####################################################################                                  
+####################################################################                                                             
